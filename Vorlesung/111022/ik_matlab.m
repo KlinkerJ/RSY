@@ -31,5 +31,11 @@ function q = ikSolver(pos, eul, qprevios) % (copied from ik_matlab_beispiel but 
     theta1 = [theta1P;theta1N]  
      
     % ------------------------------ Theta 5 ------------------------------ 
+    theta5 = zeros(4,1); % 4x1 matrix filled with zeros
+    for i = 1:lenght(theta5)
+        
 
-end 
+
+
+    end
+end     
