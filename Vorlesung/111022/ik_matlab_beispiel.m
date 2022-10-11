@@ -4,7 +4,7 @@ function q = ikSolverUR3(pos,eul,qPrevious)
     
     %The input pos is a 3x1 vector with x-, y-, z-coordinate for the desired position of the end-effector.
     %The input eul is a 3x1 vector with the desired orientation of the end-effector in euler angles (Z,Y,X).
-    %The input q is the previous configuration (joint angles) of the robot.
+    %The input q is the previous configuration (joint angles) of the robot (6x1 vector).
     
     
     %DH parameters for the UR3 robot taken from here: https://www.universal-robots.com/articles/ur/application-installation/dh-parameters-for-calculations-of-kinematics-and-dynamics
@@ -18,8 +18,6 @@ function q = ikSolverUR3(pos,eul,qPrevious)
     T06(1:3,4) = pos;
     
     P06 = T06(1:3,4);
-    
-    
     
     % ------------------------------ Theta 1 ------------------------------ 
     %Theta1 = 2 solutions, isn't depended on other angles.
@@ -261,4 +259,5 @@ function q = ikSolverUR3(pos,eul,qPrevious)
             solution = solutions(i,:);
         end
     end
-    end
+end
+
