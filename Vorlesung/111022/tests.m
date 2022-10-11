@@ -4,7 +4,7 @@
 %The input q is the previous configuration (joint angles) of the robot (6x1 vector).
 
 a = [1,1,1];
-b = [pi, pi, pi]
-c = [pi, pi, pi, pi, pi, pi]
+b = [pi, pi, pi];
+c = [pi, pi, pi, pi, pi, pi];
 
 ik_matlab_beispiel(a,b,c)
