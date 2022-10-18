@@ -29,6 +29,6 @@ d6 = 0.0996;
 a6 = 0;
 theta6 = 0;
 
-alpha = [alpha1; alpha2; alpha3; alpha4; alpha5; alpha6];
+alphaArr = [alpha1; alpha2; alpha3; alpha4; alpha5; alpha6];
 d = [d1; d2; d3; d4; d5; d6];
 a = [a1; a2; a3; a4; a5; a6];
