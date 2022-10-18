@@ -31,16 +31,14 @@ function q = ikSolver(pos, eul, qprevios) % (copied from ik_matlab_beispiel but 
     theta1 = [theta1P;theta1N]  
      
     % ------------------------------ Theta 5 ------------------------------ 
-    syms theta5 [4 1] % create symbolic 4x1 matrix 
+    theta5 = zeros(4, 1); % create numeric 4x1 matrix 
     idx = 1;
     for i = 1:length(theta1)
-        syms acosValue
-        assume(acosValue, 'real')
-        assumeAlso(acosValue <= 1)
         acosValue = (P06(1)*sin(theta1(i)) - P06(2)*cos(theta1(i)) - d(4))/d(6); % (formula 12 [1])
-        %if acosValue > 1            % acos will not fail, so check if result is imaginary
-        %    acosValue = NaN;        % set value to Nan -> all following quations with this value will return also NaN
-        %end
+        if acosValue > 1            % acos will not fail, so check if result is imaginary
+            acosValue = NaN;        % set value to Nan -> all following quations with this value will return also NaN
+            warning('Theta5 can not be detemined. Value inside acos is above 1 and the solution is therefore not valied.')
+        end
         for sign = [1 -1]           
             theta5(idx) = sign * acos(acosValue);                               % (formula 12 [1])
             idx = idx + 1;
@@ -53,6 +51,7 @@ function q = ikSolver(pos, eul, qprevios) % (copied from ik_matlab_beispiel but 
     X60 = T60(1:3,1);    
 
     syms theta6 [4 1] % create symbolic 4x1 matrix
+    theta6 = zeros(4, 1);
     theta6(1) = calculateTheta6(X60, Y60, theta1(1), theta5(1)); % (formula 16 [1])
     theta6(2) = calculateTheta6(X60, Y60, theta1(1), theta5(2)); % (formula 16 [1])
     theta6(3) = calculateTheta6(X60, Y60, theta1(2), theta5(3)); % (formula 16 [1])
@@ -62,13 +61,12 @@ function q = ikSolver(pos, eul, qprevios) % (copied from ik_matlab_beispiel but 
     t5 = [1 3];
     theta6Index = 1:4;
     t6 = 1;
-    theta3_ = zeros(8,1);
+    theta3 = zeros(8,1);
     P14_ = zeros(8,3);
     T14_ = zeros(4,4,8);
     idx = 1;
     for t1 = 1:length(theta1)
         for sign = [1 -1]
-            [P14, T14] = calculateTheta3(T06, alphaArr, a, d, theta1(t1), theta5(t5(t1)), theta6(t5(t1)))
             [theta3, P14, T14] = calculateTheta3(T06, alphaArr, a, d, theta1(t1), theta5(t5(t1)), theta6(t5(t1)));
             theta3(idx) = sign * theta3;
             P14_(idx,:) = P14';
@@ -84,13 +82,13 @@ function q = ikSolver(pos, eul, qprevios) % (copied from ik_matlab_beispiel but 
         t6 = t6 + 1;
     end
     
-    %Reagrange so lists match.
+    %Rearagnge so lists match.
     rearangeIdx = [1 3 2 4 5 7 6 8];
-    theta3_Copy = theta3_;
+    theta3_Copy = theta3;
     P14_Copy = P14_;
     T14_Copy = T14_;
     for i = 1:length(rearangeIdx)
-        theta3_Copy(i) = theta3_(rearangeIdx(i));
+        theta3_Copy(i) = theta3(rearangeIdx(i));
         P14_Copy(i,:) = P14_(rearangeIdx(i),:);
         T14_Copy(:,:,i) = T14_(:,:,rearangeIdx(i));
     end
@@ -98,6 +96,12 @@ function q = ikSolver(pos, eul, qprevios) % (copied from ik_matlab_beispiel but 
     P14_ = P14_Copy;
     T14_ = T14_Copy;
 
+    % ------------------------------ Theta 2 ------------------------------ 
+    theta2 = zeros(8,1);
+    for i = 1:length(theta3)
+        P14_xz_length = norm([P14_(i,1) P14_(i,3)]);                                                % (part of formula 22 [1])
+        theta2(i) = atan2(-P14_(i,3), -P14_(i,1)) - asin(-a(3) * sin(theta3_(i))/P14_xz_length);    % (formula 22 [1])
+    end
 
 end     
 
@@ -116,47 +120,39 @@ function [theta3, P14, T14] = calculateTheta3(T06, alpha_, a, d, theta1, theta5,
     
     P14_xz_length = norm([P14(1) P14(3)]);
     
-    %Before calculating theta3 we have to check conditions mentioned in the
-    %paper. The conditions are
-    conditions = [abs(a(2)-a(3));
-                  abs(a(2)+a(3))];
-    
-    % if P14_xz_length > conditions(1) && P14_xz_length < conditions(2)
-    %    theta3 = acos((P14_xz_length^2 - a(2)^2 -a(3)^2)/(2*a(2)*a(3)));
-    % else %If this happens all the time, maybe just set theta3 to zero.
-    %    theta3=0;
-    %     error('Theta3 can not be determined. Conditions are not uphold. P14_xz_length is exceding the condidtions.')
-    % end
-    theta3 = acos((P14_xz_length^2 - a(2)^2 -a(3)^2)/(2*a(2)*a(3)));
+    conditions = [abs(a(2)-a(3)); abs(a(2)+a(3))];                          % (conditions described after formula 19 [1])   
+    if P14_xz_length > conditions(1) && P14_xz_length < conditions(2)       % (conditions described after formula 19 [1])
+       theta3 = acos((P14_xz_length^2 - a(2)^2 -a(3)^2)/(2*a(2)*a(3)));     % (formula 19 [1])
+    else %If this happens all the time, maybe just set theta3 to zero.
+       theta3=NaN;
+       warning('Theta3 can not be determined. Conditions are not uphold. P14_xz_length is exceding the condidtions.')
+    end
 end
 
-function [P14, T14] = calculateP14(T06, alpha_, a, d, theta1, theta5, theta6)
-    
+function [P14, T14] = calculateP14(T06, alpha_, a, d, theta1, theta5, theta6)    
     T01 = DH2tform(0, 0, d(1), theta1);
     T10 = inv(T01);
     
     T45 = DH2tform(alpha_(4), a(4), d(5), theta5);
-    T54 = inv(T45);
-    
+    T54 = inv(T45);    
     
     T56 = DH2tform(alpha_(5), a(5), d(6), theta6);
-    T65 = inv(T56);
-    
+    T65 = inv(T56);    
     
     T14 = T10*T06*T65*T54;
     P14 = T14(1:3,4);
 end
 
-function Transform = DH2tform(alpha_, a, d, theta)
-    syms Transform [4 4] 
+function Transform = DH2tform(alpha_, a_, d_, theta_)
+    Transform = eye(4)
     
     alpha_mi = alpha_; 
-    a_mi = a; 
-    d_i = d; 
-    theta_i = theta; 
+    a_mi = a_; 
+    d_i = d_; 
+    theta_i = theta_; 
     
     % Row 1 
-    Transform(1,1) = cos(theta_i);
+    Transform(1, 1) = cos(theta_i);
     Transform(1, 2) = -sin(theta_i); 
     Transform(1, 3) = 0; 
     Transform(1, 4) = a_mi; 
