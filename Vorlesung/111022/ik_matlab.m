@@ -34,9 +34,9 @@ function q = ikSolver(pos, eul, qprevios) % (copied from ik_matlab_beispiel but 
     syms theta5 [4 1] % create symbolic 4x1 matrix 
     idx = 1;
     for i = 1:length(theta1)
-        %syms acosValue
-        %assume(acosValue, 'real')
-        %assumeAlso(acosValue <= 1)
+        syms acosValue
+        assume(acosValue, 'real')
+        assumeAlso(acosValue <= 1)
         acosValue = (P06(1)*sin(theta1(i)) - P06(2)*cos(theta1(i)) - d(4))/d(6); % (formula 12 [1])
         %if acosValue > 1            % acos will not fail, so check if result is imaginary
         %    acosValue = NaN;        % set value to Nan -> all following quations with this value will return also NaN
@@ -57,6 +57,46 @@ function q = ikSolver(pos, eul, qprevios) % (copied from ik_matlab_beispiel but 
     theta6(2) = calculateTheta6(X60, Y60, theta1(1), theta5(2)); % (formula 16 [1])
     theta6(3) = calculateTheta6(X60, Y60, theta1(2), theta5(3)); % (formula 16 [1])
     theta6(4) = calculateTheta6(X60, Y60, theta1(2), theta5(4)); % (formula 16 [1])
+    
+    % ------------------------------ Theta 3 ------------------------------ 
+    t5 = [1 3];
+    theta6Index = 1:4;
+    t6 = 1;
+    theta3_ = zeros(8,1);
+    P14_ = zeros(8,3);
+    T14_ = zeros(4,4,8);
+    idx = 1;
+    for t1 = 1:length(theta1)
+        for sign = [1 -1]
+            [P14, T14] = calculateTheta3(T06, alphaArr, a, d, theta1(t1), theta5(t5(t1)), theta6(t5(t1)))
+            [theta3, P14, T14] = calculateTheta3(T06, alphaArr, a, d, theta1(t1), theta5(t5(t1)), theta6(t5(t1)));
+            theta3(idx) = sign * theta3;
+            P14_(idx,:) = P14';
+            T14_(:,:,idx) = T14;
+            idx = idx + 1;
+            
+            [theta3, P14, T14] = calculateTheta3(T06, alphaArr, a, d, theta1(t1), theta5(t5(t1)+1), theta6(t5(t1)+1));
+            theta3(idx) = sign * theta3;
+            P14_(idx,:) = P14';
+            T14_(:,:,idx) = T14;
+            idx = idx + 1;
+        end     
+        t6 = t6 + 1;
+    end
+    
+    %Reagrange so lists match.
+    rearangeIdx = [1 3 2 4 5 7 6 8];
+    theta3_Copy = theta3_;
+    P14_Copy = P14_;
+    T14_Copy = T14_;
+    for i = 1:length(rearangeIdx)
+        theta3_Copy(i) = theta3_(rearangeIdx(i));
+        P14_Copy(i,:) = P14_(rearangeIdx(i),:);
+        T14_Copy(:,:,i) = T14_(:,:,rearangeIdx(i));
+    end
+    theta3_ = theta3_Copy;
+    P14_ = P14_Copy;
+    T14_ = T14_Copy;
 
 
 end     
@@ -69,4 +109,67 @@ function theta6_ = calculateTheta6(X60_, Y60_, theta1_, theta5_) % (formula 15-1
         denominator = sin(theta5_);                                             % (formula 16 [1])
         theta6_ = atan2(leftNumerator/denominator, rightNumerator/denominator); % (formula 16 [1])
     end
+end
+
+function [theta3, P14, T14] = calculateTheta3(T06, alpha_, a, d, theta1, theta5, theta6)
+    [P14, T14] = calculateP14(T06, alpha_, a, d, theta1, theta5, theta6);
+    
+    P14_xz_length = norm([P14(1) P14(3)]);
+    
+    %Before calculating theta3 we have to check conditions mentioned in the
+    %paper. The conditions are
+    conditions = [abs(a(2)-a(3));
+                  abs(a(2)+a(3))];
+    
+    % if P14_xz_length > conditions(1) && P14_xz_length < conditions(2)
+    %    theta3 = acos((P14_xz_length^2 - a(2)^2 -a(3)^2)/(2*a(2)*a(3)));
+    % else %If this happens all the time, maybe just set theta3 to zero.
+    %    theta3=0;
+    %     error('Theta3 can not be determined. Conditions are not uphold. P14_xz_length is exceding the condidtions.')
+    % end
+    theta3 = acos((P14_xz_length^2 - a(2)^2 -a(3)^2)/(2*a(2)*a(3)));
+end
+
+function [P14, T14] = calculateP14(T06, alpha_, a, d, theta1, theta5, theta6)
+    
+    T01 = DH2tform(0, 0, d(1), theta1);
+    T10 = inv(T01);
+    
+    T45 = DH2tform(alpha_(4), a(4), d(5), theta5);
+    T54 = inv(T45);
+    
+    
+    T56 = DH2tform(alpha_(5), a(5), d(6), theta6);
+    T65 = inv(T56);
+    
+    
+    T14 = T10*T06*T65*T54;
+    P14 = T14(1:3,4);
+end
+
+function Transform = DH2tform(alpha_, a, d, theta)
+    syms Transform [4 4] 
+    
+    alpha_mi = alpha_; 
+    a_mi = a; 
+    d_i = d; 
+    theta_i = theta; 
+    
+    % Row 1 
+    Transform(1,1) = cos(theta_i);
+    Transform(1, 2) = -sin(theta_i); 
+    Transform(1, 3) = 0; 
+    Transform(1, 4) = a_mi; 
+    
+    % Row 2
+    Transform(2, 1) = sin(theta_i)*cos(alpha_mi); 
+    Transform(2, 2) = cos(theta_i) *cos(alpha_mi); 
+    Transform(2, 3) = -sin(alpha_mi); 
+    Transform(2, 4) = -sin(alpha_mi)*d_i; 
+    
+    % Row 3 
+    Transform(3, 1) = sin(theta_i)*sin(alpha_mi); 
+    Transform(3, 2) = cos(theta_i)*sin(alpha_mi); 
+    Transform(3, 3) = cos(alpha_mi); 
+    Transform(3, 4) = cos(alpha_mi) *d_i; 
 end
