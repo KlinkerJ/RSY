@@ -31,11 +31,42 @@ function q = ikSolver(pos, eul, qprevios) % (copied from ik_matlab_beispiel but 
     theta1 = [theta1P;theta1N]  
      
     % ------------------------------ Theta 5 ------------------------------ 
-    theta5 = zeros(4,1); % 4x1 matrix filled with zeros
-    for i = 1:lenght(theta5)
-        
-
-
-
+    syms theta5 [4 1] % create symbolic 4x1 matrix 
+    idx = 1;
+    for i = 1:length(theta1)
+        %syms acosValue
+        %assume(acosValue, 'real')
+        %assumeAlso(acosValue <= 1)
+        acosValue = (P06(1)*sin(theta1(i)) - P06(2)*cos(theta1(i)) - d(4))/d(6); % (formula 12 [1])
+        %if acosValue > 1            % acos will not fail, so check if result is imaginary
+        %    acosValue = NaN;        % set value to Nan -> all following quations with this value will return also NaN
+        %end
+        for sign = [1 -1]           
+            theta5(idx) = sign * acos(acosValue);                               % (formula 12 [1])
+            idx = idx + 1;
+        end
     end
+
+    % ------------------------------ Theta 6 ------------------------------ 
+    T60 = inv(T06);     % (formula 13 [1]) 
+    Y60 = T60(1:3,2);   % (formula 13 [1])
+    X60 = T60(1:3,1);    
+
+    syms theta6 [4 1] % create symbolic 4x1 matrix
+    theta6(1) = calculateTheta6(X60, Y60, theta1(1), theta5(1)); % (formula 16 [1])
+    theta6(2) = calculateTheta6(X60, Y60, theta1(1), theta5(2)); % (formula 16 [1])
+    theta6(3) = calculateTheta6(X60, Y60, theta1(2), theta5(3)); % (formula 16 [1])
+    theta6(4) = calculateTheta6(X60, Y60, theta1(2), theta5(4)); % (formula 16 [1])
+
+
 end     
+
+function theta6_ = calculateTheta6(X60_, Y60_, theta1_, theta5_) % (formula 15-16 [1])
+    theta6_ = 0;
+    if sin(theta5_) ~= 0
+        leftNumerator = -X60_(2)*sin(theta1_) + Y60_(2)*cos(theta1_);           % (formula 15 [1])
+        rightNumerator = X60_(1)*sin(theta1_) - Y60_(1)*cos(theta1_);           % (formula 15 [1])
+        denominator = sin(theta5_);                                             % (formula 16 [1])
+        theta6_ = atan2(leftNumerator/denominator, rightNumerator/denominator); % (formula 16 [1])
+    end
+end
