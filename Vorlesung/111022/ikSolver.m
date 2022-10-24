@@ -106,8 +106,8 @@ function q = ikSolver(pos, eul, qPrevious) % (copied from ik_matlab_beispiel but
     theta4 = zeros(8,1);
     idx = 1;
     for t2t3 = 1:length(theta2)
-        T12 = DH2tform(alpha(1),a(1),d(2),theta2(t2t3));     
-        T23 = DH2tform(alpha(2),a(2),d(3),theta3(t2t3));
+        T12 = DH2tform(alphaArr(1),a(1),d(2),theta2(t2t3));     
+        T23 = DH2tform(alphaArr(2),a(2),d(3),theta3(t2t3));
         
         T21 = inv(T12);
         % old: slow and less accurate
