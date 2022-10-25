@@ -13,7 +13,7 @@ function q = ikSolverUR3(pos,eul,qPrevious)
     %alpha = [pi/2 0 0 pi/2 -pi/2 0];
 
     load_constants_UR5E;
-    alpha = alphaArr
+    alpha = alphaArr;
     
     % Finding end effector related to base.
     T06 = eye(4); 
@@ -91,12 +91,15 @@ function q = ikSolverUR3(pos,eul,qPrevious)
     for t1 = 1:length(theta1_)
         for sign = [1 -1]
             [theta3, P14, T14] = calculateTheta3(T06, alpha, a, d, theta1_(t1), theta5_(t5(t1)), theta6_(t5(t1)));
+
+
             theta3_(idx) = sign * theta3;
             P14_(idx,:) = P14';
             T14_(:,:,idx) = T14;
             idx = idx + 1;
             
             [theta3, P14, T14] = calculateTheta3(T06, alpha, a, d, theta1_(t1), theta5_(t5(t1)+1), theta6_(t5(t1)+1));
+
             theta3_(idx) = sign * theta3;
             P14_(idx,:) = P14';
             T14_(:,:,idx) = T14;
@@ -262,5 +265,6 @@ function q = ikSolverUR3(pos,eul,qPrevious)
             solution = solutions(i,:);
         end
     end
+    disp(solutions)
 end
 
