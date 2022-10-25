@@ -210,35 +210,37 @@ DH6 = RotZLink6 * TrZAxShift6 * TrXArmLen6 * RotXAxShift6;
 DHall = DH1 * DH2 * DH3 * DH4 * DH5 * DH6;
 
 %DH-Params UR5E
-alpha1 = pi/2;
-d1 = 0.1625;
-a1 = 0;
-theta1 = 0;
+load_constants_UR5E;
 
-alpha2 = 0;
-d2 = 0;
-a2 = -0.425;
-theta2 = 0;
+%alpha1 = pi/2;
+%d1 = 0.1625;
+%a1 = 0;
+%theta1 = 0;
 
-alpha3 = 0;
-d3 = 0;
-a3 = -0.3922;
-theta3 = 0;
+%alpha2 = 0;
+%d2 = 0;
+%a2 = -0.425;
+%theta2 = 0;
 
-alpha4 = pi/2;  
-d4 = 0.1333;
-a4 = 0;
-theta4 = 0;
+%alpha3 = 0;
+%d3 = 0;
+%a3 = -0.3922;
+%theta3 = 0;
 
-alpha5 = -pi/2;
-d5 = 0.0997;
-a5 = 0;
-theta5 = 0; 
+%alpha4 = pi/2;  
+%d4 = 0.1333;
+%a4 = 0;
+%theta4 = 0;
 
-alpha6 = 0;
-d6 = 0.0996;
-a6 = 0;
-theta6 = 0; 
+%alpha5 = -pi/2;
+%d5 = 0.0997;
+%a5 = 0;
+%theta5 = 0; 
+
+%alpha6 = 0;
+%d6 = 0.0996;
+%a6 = 0;
+%theta6 = 0; 
 
     
 temp = subs(DHall);

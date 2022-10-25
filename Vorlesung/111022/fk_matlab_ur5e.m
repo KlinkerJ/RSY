@@ -1,4 +1,4 @@
-function pos = fk_matlab_ur5e(thetaArr)
+function pos, eul = fk_matlab_ur5e(thetaArr)
     
     load_DH_matrices;
     load_constants_UR5E;
@@ -12,8 +12,9 @@ function pos = fk_matlab_ur5e(thetaArr)
     theta6 = thetaArr(6);
     
     
-    temp = subs(DHall);
-    disp(DHall);
-    pos = temp(1:3,4);
+    pos_matrix = subs(DHall);
+    pos = pos_matrix(1:3,4);
     pos = double(pos);
+    eul = pos_matrix(1:3,1:3);
+    eul = doule(eul);
 end
