@@ -4,13 +4,15 @@
 %The input q is the previous configuration (joint angles) of the robot (6x1 vector).
 
 load_constants_UR5E;
+load_DH_matrices;
 
-a = [0.2, 0.1, 0.3]; % cartesion positions for endeffector in mm
-b = [pi, pi, pi]; % orientation (euler) for endeffector in rad
-c = [pi, pi, pi, pi, pi, pi]; % joint angles in rad
+pos = [0.2, 0.1, 0.3]; % cartesion positions for endeffector in mm
+eul = [pi, pi, pi]; % orientation (euler) for endeffector in rad
+theta_prev = [pi, pi, pi, pi, pi, pi]; % joint angles in rad
 
-thetaArr = ik_matlab_beispiel(a, b, c) %WARNING: This script (pulled via moodle) is using UR3 parameters, our robot is an UR5e
-thetaArr = ik_matlab_ur5e(a, b, c)
+%thetaArr = ik_matlab_beispiel(pos, eul, theta_prev) %WARNING: This script (pulled via moodle) is using UR3 parameters, our robot is an UR5e
+
+thetaArr = ik_matlab_ur5e(pos, eul, theta_prev, alphaArr, a, d)
 
 %ret = fk_matlab_ur5e(thetaArr);
 %disp(ret)

@@ -1,17 +1,11 @@
-function q = ik_matlab_ur5e(pos, eul, qPrevious) % (copied from ik_matlab_beispiel but adapted to UR5e)
-
+function q = ik_matlab_ur(pos, eul, qPrevious, alphaArr, a, d) % (copied from ik_matlab_beispiel but adapted to UR5e)
     % Formula numbers according to:
     % [1] Kinematics of a UR5, Rasmus Skovgaard Andersen, Aalborg University (s. IK_kommentiert.pdf)
-
-    load_constants_UR5E; % load robot parameter into workspace
-    load_DH_matrices; % load robot DH into workspace
-
     % Finding end effector related to base.
     T06 = eye(4); % creating 4x4 identity matrix
     T06(1:3, 1:3) = eul2rotm(eul); % write rotations in the upper left corner of the matrix
     T06(1:3, 4) = pos; % write position on the right side of the matrix
     P06 = T06(1:3, 4); % origin of frame 6
-
     % ------------------------------ Theta 1 ------------------------------
     % Theta1 = 2 solutions, isn't depended on other angles.
 
@@ -19,7 +13,7 @@ function q = ik_matlab_ur5e(pos, eul, qPrevious) % (copied from ik_matlab_beispi
     phi1 = atan2(P05(2), P05(1)); % (formula 7 [1])
 
     if P05(1) ~= 0 || P05(2) ~= 0 % unequality because square root would fail if both are zero (zero under square root)
-        phi2P = acos(d4 / sqrt(P05(1)^2 + P05(2)^2)); % (formula 8 [1])
+        phi2P = acos(d(4) / sqrt(P05(1)^2 + P05(2)^2)); % (formula 8 [1])
         phi2N = -phi2P; % (formula 8 [1])
         theta1P = phi1 + phi2P + pi / 2; % (formula 9 [1])
         theta1N = phi1 + phi2N + pi / 2; % (formula 9 [1])
@@ -38,7 +32,7 @@ function q = ik_matlab_ur5e(pos, eul, qPrevious) % (copied from ik_matlab_beispi
         acosValue = (P06(1) * sin(theta1(i)) - P06(2) * cos(theta1(i)) - d(4)) / d(6); % (formula 12 [1])
 
         if acosValue > 1 % acos will not fail, so check if result is imaginary
-            acosValue = NaN; % set value to Nan -> all following quations with this value will return also NaN
+            acosValue = 0; % set value to Nan -> all following quations with this value will return also NaN
             warning('Theta5 can not be detemined. Value inside acos is above 1 and the solution is therefore not valied.')
         end
 
@@ -48,7 +42,7 @@ function q = ik_matlab_ur5e(pos, eul, qPrevious) % (copied from ik_matlab_beispi
         end
 
     end
-
+    
     % ------------------------------ Theta 6 ------------------------------
     T60 = inv(T06); % (formula 13 [1])
     Y60 = T60(1:3, 2); % (formula 13 [1])
@@ -59,7 +53,7 @@ function q = ik_matlab_ur5e(pos, eul, qPrevious) % (copied from ik_matlab_beispi
     theta6(2) = calculateTheta6(X60, Y60, theta1(1), theta5(2)); % (formula 16 [1])
     theta6(3) = calculateTheta6(X60, Y60, theta1(2), theta5(3)); % (formula 16 [1])
     theta6(4) = calculateTheta6(X60, Y60, theta1(2), theta5(4)); % (formula 16 [1])
-
+    
     % ------------------------------ Theta 3 ------------------------------
     t5 = [1 3];
     t6 = 1;
@@ -102,7 +96,7 @@ function q = ik_matlab_ur5e(pos, eul, qPrevious) % (copied from ik_matlab_beispi
     theta3 = theta3_Copy;
     P14_ = P14_Copy;
     T14_ = T14_Copy;
-
+    
     % ------------------------------ Theta 2 ------------------------------
     theta2 = zeros(8, 1);
 
@@ -130,6 +124,7 @@ function q = ik_matlab_ur5e(pos, eul, qPrevious) % (copied from ik_matlab_beispi
         theta4(idx) = atan2(X34(2), X34(1)); % (formula 23 [1])
         idx = idx + 1;
     end
+    
 
     % ------------------------------ generate solutions -------------------
     solutions = generatePossibleSolutions(theta1, theta2, theta3, theta4, theta5, theta6);
@@ -160,7 +155,7 @@ function [theta3_buff, P14, T14] = calculateTheta3(T06, alpha_, a, d, theta1, th
     if P14_xz_length > conditions(1) && P14_xz_length < conditions(2) % (conditions described after formula 19 [1])
         theta3_buff = acos((P14_xz_length^2 - a(2)^2 -a(3)^2)/(2*a(2)*a(3)));; % (formula 19 [1])
     else %If this happens all the time, maybe just set theta3 to zero.
-        theta3_buff = NaN; % 0
+        theta3_buff = 0; % NaN
         warning('Theta3 can not be determined. Conditions are not uphold. P14_xz_length is exceding the condidtions.')
     end
 
