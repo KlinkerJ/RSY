@@ -208,35 +208,35 @@ RotXAxShift6 = [
 % substitute symbols with numerical values
 load_constants_UR5E;
 
-RotZLink1 = subs(RotZLink1)
-TrZAxShift1 = subs(TrZAxShift1)
-TrXArmLen1 = subs(TrXArmLen1)
-RotXAxShift1 = subs(RotXAxShift1)
+RotZLink1 = subs(RotZLink1);
+TrZAxShift1 = subs(TrZAxShift1);
+TrXArmLen1 = subs(TrXArmLen1);
+RotXAxShift1 = subs(RotXAxShift1);
 
-RotZLink2 = subs(RotZLink2)
-TrZAxShift2 = subs(TrZAxShift2)
-TrXArmLen2 = subs(TrXArmLen2)
-RotXAxShift2 = subs(RotXAxShift2)
+RotZLink2 = subs(RotZLink2);
+TrZAxShift2 = subs(TrZAxShift2);
+TrXArmLen2 = subs(TrXArmLen2);
+RotXAxShift2 = subs(RotXAxShift2);
 
-RotZLink3 = subs(RotZLink3)
-TrZAxShift3 = subs(TrZAxShift3)
-TrXArmLen3 = subs(TrXArmLen3)
-RotXAxShift3 = subs(RotXAxShift3)
+RotZLink3 = subs(RotZLink3);
+TrZAxShift3 = subs(TrZAxShift3);
+TrXArmLen3 = subs(TrXArmLen3);
+RotXAxShift3 = subs(RotXAxShift3);
 
-RotZLink4 = subs(RotZLink4)
-TrZAxShift4 = subs(TrZAxShift4)
-TrXArmLen4 = subs(TrXArmLen4)
-RotXAxShift4 = subs(RotXAxShift4)
+RotZLink4 = subs(RotZLink4);
+TrZAxShift4 = subs(TrZAxShift4);
+TrXArmLen4 = subs(TrXArmLen4);
+RotXAxShift4 = subs(RotXAxShift4);
 
-RotZLink5 = subs(RotZLink5)
-TrZAxShift5 = subs(TrZAxShift5)
-TrXArmLen5 = subs(TrXArmLen5)
-RotXAxShift5 = subs(RotXAxShift5)
+RotZLink5 = subs(RotZLink5);
+TrZAxShift5 = subs(TrZAxShift5);
+TrXArmLen5 = subs(TrXArmLen5);
+RotXAxShift5 = subs(RotXAxShift5);
 
-RotZLink6 = subs(RotZLink6)
-TrZAxShift6 = subs(TrZAxShift6)
-TrXArmLen6 = subs(TrXArmLen6)
-RotXAxShift6 = subs(RotXAxShift6)
+RotZLink6 = subs(RotZLink6);
+TrZAxShift6 = subs(TrZAxShift6);
+TrXArmLen6 = subs(TrXArmLen6);
+RotXAxShift6 = subs(RotXAxShift6);
 
 DH6 = RotZLink6 * TrZAxShift6 * TrXArmLen6 * RotXAxShift6;
 
