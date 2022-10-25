@@ -6,13 +6,18 @@
 load_constants_UR5E;
 load_DH_matrices;
 
-pos = [0.2, 0.1, 0.3]; % cartesion positions for endeffector in mm
-eul = [pi, pi, pi]; % orientation (euler) for endeffector in rad
+pos = [0.1, 0.1, 0.15]; % cartesion positions for endeffector in mm
+eul = [pi/2, pi, pi/8]; % orientation (euler) for endeffector in rad
 theta_prev = [pi, pi, pi, pi, pi, pi]; % joint angles in rad
 
 %thetaArr = ik_matlab_beispiel(pos, eul, theta_prev) %WARNING: This script (pulled via moodle) is using UR3 parameters, our robot is an UR5e
+try
+    thetaArr = ik_matlab_ur(pos, eul, theta_prev, alphaArr, a, d)
 
-thetaArr = ik_matlab_ur5e(pos, eul, theta_prev, alphaArr, a, d)
-
-%ret = fk_matlab_ur5e(thetaArr);
-%disp(ret)
+    [pos2, eul2] = fk_matlab_ur(thetaArr, DHall);
+    %disp(ret)
+    disp(pos2);
+    disp(eul2);
+catch
+    warning("Can't calculate inverse kinematik, input pose is not valid");
+end
