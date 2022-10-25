@@ -226,12 +226,9 @@ function solution = closetSolution(solutions, q)
 
     for i = 1:size(solutions, 1)
         configurationDistance = sum(((solutions(i, :) - q') .* weights).^2);
-
         if configurationDistance < bestConfigurationDistance
             bestConfigurationDistance = configurationDistance;
             solution = solutions(i, :);
         end
-
     end
-
 end
