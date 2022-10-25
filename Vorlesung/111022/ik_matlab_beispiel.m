@@ -8,9 +8,12 @@ function q = ikSolverUR3(pos,eul,qPrevious)
     
     
     %DH parameters for the UR3 robot taken from here: https://www.universal-robots.com/articles/ur/application-installation/dh-parameters-for-calculations-of-kinematics-and-dynamics
-    a = [0 -243.65 -213.25 0 0 0];
-    d = [151.9 0 0 112.35 85.35 285];
-    alpha = [pi/2 0 0 pi/2 -pi/2 0];
+    %a = [0 -243.65 -213.25 0 0 0];
+    %d = [151.9 0 0 112.35 85.35 285];
+    %alpha = [pi/2 0 0 pi/2 -pi/2 0];
+
+    load_constants_UR5E;
+    alpha = alphaArr
     
     % Finding end effector related to base.
     T06 = eye(4); 
