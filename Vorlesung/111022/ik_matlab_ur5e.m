@@ -99,7 +99,7 @@ function q = ik_matlab_ur5e(pos, eul, qPrevious) % (copied from ik_matlab_beispi
         T14_Copy(:, :, i) = T14_(:, :, rearangeIdx(i));
     end
 
-    theta3_ = theta3_Copy;
+    theta3 = theta3_Copy;
     P14_ = P14_Copy;
     T14_ = T14_Copy;
 
@@ -108,7 +108,7 @@ function q = ik_matlab_ur5e(pos, eul, qPrevious) % (copied from ik_matlab_beispi
 
     for i = 1:length(theta3)
         P14_xz_length = norm([P14_(i, 1) P14_(i, 3)]); % (part of formula 22 [1])
-        theta2(i) = atan2(-P14_(i, 3), -P14_(i, 1)) - asin(-a(3) * sin(theta3_(i)) / P14_xz_length); % (formula 22 [1])
+        theta2(i) = atan2(-P14_(i, 3), -P14_(i, 1)) - asin(-a(3) * sin(theta3(i)) / P14_xz_length); % (formula 22 [1])
     end
 
     % ------------------------------ Theta 4 ------------------------------
@@ -121,9 +121,10 @@ function q = ik_matlab_ur5e(pos, eul, qPrevious) % (copied from ik_matlab_beispi
 
         T21 = inv(T12);
         % old: slow and less accurate
-        %T32 = inv(T23);
-        %T34 = T32*T21*T14_(:,:,t2t3);
-        T34 = T23 / T21 * T14_(:, :, t2t3);
+        % new, but incorrect: T34 = T23 / T21 * T14_(:, :, t2t3);
+        T32 = inv(T23);
+        T34 = T32*T21*T14_(:,:,t2t3);
+        
         X34 = T34(1:3, 1);
 
         theta4(idx) = atan2(X34(2), X34(1)); % (formula 23 [1])
@@ -149,7 +150,7 @@ function theta6_ = calculateTheta6(X60_, Y60_, theta1_, theta5_) % (formula 15-1
 
 end
 
-function [theta3, P14, T14] = calculateTheta3(T06, alpha_, a, d, theta1, theta5, theta6)
+function [theta3_buff, P14, T14] = calculateTheta3(T06, alpha_, a, d, theta1, theta5, theta6)
     [P14, T14] = calculateP14(T06, alpha_, a, d, theta1, theta5, theta6);
 
     P14_xz_length = norm([P14(1) P14(3)]);
@@ -157,9 +158,9 @@ function [theta3, P14, T14] = calculateTheta3(T06, alpha_, a, d, theta1, theta5,
     conditions = [abs(a(2) - a(3)); abs(a(2) + a(3))]; % (conditions described after formula 19 [1])
 
     if P14_xz_length > conditions(1) && P14_xz_length < conditions(2) % (conditions described after formula 19 [1])
-        theta3 = acos((P14_xz_length^2 - a(2)^2 -a(3)^2) / (2 * a(2) * a(3))); % (formula 19 [1])
+        theta3_buff = acos((P14_xz_length^2 - a(2)^2 -a(3)^2)/(2*a(2)*a(3)));; % (formula 19 [1])
     else %If this happens all the time, maybe just set theta3 to zero.
-        theta3 = NaN;
+        theta3_buff = NaN; % 0
         warning('Theta3 can not be determined. Conditions are not uphold. P14_xz_length is exceding the condidtions.')
     end
 
@@ -170,13 +171,13 @@ function [P14, T14] = calculateP14(T06, alpha_, a, d, theta1, theta5, theta6)
     T45 = DH2tform(alpha_(4), a(4), d(5), theta5);
     T56 = DH2tform(alpha_(5), a(5), d(6), theta6);
 
-    % old: slow and less accurate
-    %T10 = inv(T01);
-    %T54 = inv(T45);
-    %T65 = inv(T56);
-    %T14 = T10*T06*T65*T54;
+    % old: slow and less accurate, but at least it's working..
+    % newer, but incorrect: T14 = T01 / T06 / T56 / T45;
+    T10 = inv(T01);
+    T54 = inv(T45);
+    T65 = inv(T56);
+    T14 = T10*T06*T65*T54;
 
-    T14 = T01 / T06 / T56 / T45;
     P14 = T14(1:3, 4);
 end
 
@@ -231,4 +232,5 @@ function solution = closetSolution(solutions, q)
             solution = solutions(i, :);
         end
     end
+    disp(solutions)
 end
