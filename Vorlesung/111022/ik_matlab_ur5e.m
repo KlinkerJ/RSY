@@ -1,4 +1,4 @@
-function q = ikSolver(pos, eul, qPrevious) % (copied from ik_matlab_beispiel but adapted to UR5e)
+function q = ik_matlab_ur5e(pos, eul, qPrevious) % (copied from ik_matlab_beispiel but adapted to UR5e)
 
     % Formula numbers according to:
     % [1] Kinematics of a UR5, Rasmus Skovgaard Andersen, Aalborg University (s. IK_kommentiert.pdf)
