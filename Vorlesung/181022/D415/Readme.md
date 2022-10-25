@@ -1,4 +1,4 @@
 ## Class
-Ordner für D415 in +realsense benennen, damit die Kamera in Matlab läuft
+The folder containing the matlab files has to be named as `+realsense`, as this is the class name convention here.
 ## Howto
-```depth_example.m``` ausführen, getestet am 18.10.2022
+Execute ```depth_example.m``` as testet on 18.10.2022
