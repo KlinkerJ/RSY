@@ -1,7 +1,5 @@
 global Socket_conn; global UR3_connected;
 
-
-%% startup
 % Stellt LAN-Verbindung zwischen UR3 und Desktop-PC her
 
 if(UR3_connected == false) return; end
@@ -22,19 +20,6 @@ catch
 end
 fprintf(1, 'Verbindung mit UR3 hergestellt.\n');
 pause(2);
-
-%% bootup
-% Legt verschiedene Variablen an
-
-% Variablen für die einfache Schreibweise von pi/2 etc.
-pih= pi/2;
-piv = pi/4;
-pia = pi/8;
-
-pos = [0 0 0]; % Startwert zur Definition der Variable; nicht anfahren!
-eul = [0 0 -pi]; % 1: rot Z-achse, 2: rot Y-achse, 3: rot X-achse
-qPre = [0;-pih;0;0;pih;pih]; % = Kerze; qPre für ersten moveIt-Befehl
-Gripper = 1; % Startwert zur Defintion der Variable; 1: zu, 0: offen
 
 bootsuccess = 'Bootsequenz abgeschlossen :)';
 disp(bootsuccess)
