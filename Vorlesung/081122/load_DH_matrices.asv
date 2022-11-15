@@ -207,7 +207,7 @@ RotXAxShift6 = [
 
 DH6 = RotZLink6 * TrZAxShift6 * TrXArmLen6 * RotXAxShift6;
 
-%DHall = DH1 * DH2 * DH3 * DH4 * DH5 * DH6;
+DHall = DH1 * DH2 * DH3 * DH4 * DH5 * DH6;
 
 % substitute symbols with numerical values
 %load_constants_UR5E;
@@ -249,5 +249,4 @@ DH4 = subs(DH4);
 DH5 = subs(DH5);
 DH6 = subs(DH6);
 
-DHall = DH1 * DH2 * DH3 * DH4 * DH5 * DH6;
-%DHall = subs(DHall);
+DHall = subs(DHall);

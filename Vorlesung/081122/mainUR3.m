@@ -12,6 +12,8 @@ load_DH_matrices;
 decision = input("Drücke k, falls Du die Kerzenposition anfahren möchtest", "s");
 if decision == "k"
     BewWinkel = Kerze;
+    %DHall = subs(DHall);
+    %[pos2, eul2] = fk_matlab_ur(Kerze, DHall)
     Gripper = 0;
     moveIt
 else
