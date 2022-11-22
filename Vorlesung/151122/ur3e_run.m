@@ -7,10 +7,11 @@ bootUp
 
 % load position and robot params
 positionen;
-load_constants_UR3E;
 load_DH_matrices;
+load_constants_UR3E;
 
-decision = input("Drücke k, falls Du die Kerzenposition anfahren möchtest ", "s");
+
+decision = input("Drücke k, kv, 1 oder d ", "s");
 if decision == "k"
     BewWinkel = Kerze;
 
@@ -23,6 +24,30 @@ elseif decision == '1'
     eul = [0, pi, 0] % has to be in RZ, RY, RX
     BewWinkel = ik_matlab_ur(pos, eul, qPre, alphaArr, a, d);
     disp(BewWinkel)
+elseif decision == '2'
+    % folgende position kann korrekt angefahren werden:
+    pos = [-0.15, -0.15, 0.5]
+    eul = [1.711, 2.6, 0] % has to be in RZ, RY, RX
+    BewWinkel = ik_matlab_ur(pos, eul, qPre, alphaArr, a, d);
+    disp(BewWinkel)
+elseif decision == '3'
+    % folgende position kann korrekt angefahren werden:
+    pos = [-0.25, -0.25, 0.5]
+    eul = [0, pi, 0] % has to be in RZ, RY, RX
+    BewWinkel = ik_matlab_ur(pos, eul, qPre, alphaArr, a, d);
+    disp(BewWinkel)
+elseif decision == '4'
+    % folgende position kann korrekt angefahren werden:
+    pos = [0.25, 0.25, 0.5]
+    eul = [0, -pi, 0] % has to be in RZ, RY, RX
+    BewWinkel = ik_matlab_ur(pos, eul, qPre, alphaArr, a, d);
+    disp(BewWinkel)
+elseif decision == 'l'
+    % folgende position kann korrekt angefahren werden:
+    pos = [0.085, 0.0132, 0.070]
+    eul = [0.1, 0.1, 0.1] % has to be in RZ, RY, RX
+    BewWinkel = ik_matlab_ur(pos, eul, qPre, alphaArr, a, d);
+    disp(BewWinkel)
 elseif decision == 'd'
     BewWinkel = Kerze;
     moveIt
@@ -31,6 +56,12 @@ elseif decision == 'd'
     eul = [0, pi, 0] % has to be in RZ, RY, RX
     BewWinkel = ik_matlab_ur(pos, eul, qPre, alphaArr, a, d);
     moveIt
+elseif decision == 't' 
+    pos = [-0.2404, -0.15838, 0.37692]
+    eul = [-0.092, -2.116, 2.316] % has to be in RZ, RY, RX
+    BewWinkel = ik_matlab_ur(pos, eul, qPre, alphaArr, a, d);
+    fk_matlab_ur(BewWinkel, DHall)
+    %moveIt
 else
     %POS1
     % pos = [0.128, 0.04, 0.311]
