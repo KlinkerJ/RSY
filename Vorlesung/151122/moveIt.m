@@ -37,13 +37,13 @@ data = ones(1,48);
 Stillstandswerte = zeros(1,48);
 checkvalue = data;
 while ~isequal(Stillstandswerte,checkvalue)
-    IPP = tcpclient('192.168.0.9',30003);
+    IPP = tcpclient(Robot_IP,Port_NR);
     data = read(IPP,500,"int8");
     checkvalue = data(61:108);
-    pause(0.05);
-    % debug = 'Ich warte.';     % debug tool kann anzeigen ob die Schleife
+    pause(0.01);
+    %debug = 'Ich warte.';     % debug tool kann anzeigen ob die Schleife
                                 % durchläuft
-    % disp(debug)
+    %disp(debug)
 end
 
 
