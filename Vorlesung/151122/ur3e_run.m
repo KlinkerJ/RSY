@@ -10,7 +10,6 @@ positionen;
 load_constants_UR3E;
 load_DH_matrices;
 
-
 decision = input("Drücke k, falls Du die Kerzenposition anfahren möchtest ", "s");
 if decision == "k"
     BewWinkel = Kerze;
@@ -24,7 +23,14 @@ elseif decision == '1'
     eul = [0, pi, 0] % has to be in RZ, RY, RX
     BewWinkel = ik_matlab_ur(pos, eul, qPre, alphaArr, a, d);
     disp(BewWinkel)
-
+elseif decision == 'd'
+    BewWinkel = Kerze;
+    moveIt
+    load_constants_UR3E; %has to be loaded between each position drive
+    pos = [-0.15, -0.15, 0.5]
+    eul = [0, pi, 0] % has to be in RZ, RY, RX
+    BewWinkel = ik_matlab_ur(pos, eul, qPre, alphaArr, a, d);
+    moveIt
 else
     %POS1
     % pos = [0.128, 0.04, 0.311]
