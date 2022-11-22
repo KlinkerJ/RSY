@@ -5,9 +5,8 @@
 clear all
 bootUp
 positionen
-
-load_constants_UR3E;
 load_DH_matrices;
+load_constants_UR3E;
 
 decision = input("Drücke k, falls Du die Kerzenposition anfahren möchtest", "s");
 if decision == "k"

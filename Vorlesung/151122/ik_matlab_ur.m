@@ -127,9 +127,9 @@ function q = ik_matlab_ur(pos, eul, qPrevious, alphaArr, a, d) % (copied from ik
     
 
     % ------------------------------ generate solutions -------------------
+    global solutions
     solutions = generatePossibleSolutions(theta1, theta2, theta3, theta4, theta5, theta6);
     solution = closetSolution(solutions, qPrevious);
-
     q = solution';
 end
 
