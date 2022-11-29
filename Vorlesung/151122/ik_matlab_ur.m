@@ -3,7 +3,7 @@ function q = ik_matlab_ur(pos, eul, qPrevious, alphaArr, a, d) % (copied from ik
     % [1] Kinematics of a UR5, Rasmus Skovgaard Andersen, Aalborg University (s. IK_kommentiert.pdf)
     % Finding end effector related to base.
     T06 = eye(4); % creating 4x4 identity matrix
-    T06(1:3, 1:3) = eul2rotm(eul); % write rotations in the upper left corner of the matrix
+    T06(1:3, 1:3) = eul2rotm(eul, 'XYZ'); % write rotations in the upper left corner of the matrix
     T06(1:3, 4) = pos; % write position on the right side of the matrix
     P06 = T06(1:3, 4); % origin of frame 6
     % ------------------------------ Theta 1 ------------------------------
@@ -227,5 +227,5 @@ function solution = closetSolution(solutions, q)
             solution = solutions(i, :);
         end
     end
-    %disp(solutions)
+    disp(solutions)
 end
