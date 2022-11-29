@@ -18,6 +18,9 @@ if decision == "k"
 elseif decision == 'kv'
         BewWinkel = KlKerzeVorne;
 
+elseif decision == 'h'
+    BewWinkel = HomeUnten;
+
 elseif decision == '1'
     % folgende position kann korrekt angefahren werden:
     pos = [-0.15, -0.15, 0.5]
@@ -26,21 +29,47 @@ elseif decision == '1'
     disp(BewWinkel)
 elseif decision == '2'
     % folgende position kann korrekt angefahren werden:
-    pos = [-0.15, -0.15, 0.5]
-    eul = [1.711, 2.6, 0] % has to be in RZ, RY, RX
-    BewWinkel = ik_matlab_ur(pos, eul, qPre, alphaArr, a, d);
-    disp(BewWinkel)
-elseif decision == '3'
-    % folgende position kann korrekt angefahren werden:
     pos = [-0.25, -0.25, 0.5]
     eul = [0, pi, 0] % has to be in RZ, RY, RX
     BewWinkel = ik_matlab_ur(pos, eul, qPre, alphaArr, a, d);
     disp(BewWinkel)
+elseif decision == '3'
+    pos = [-0.15, -0.15, 0.4]
+    eul = [0.2, pi, 0] % has to be in RZ, RY, RX
+    BewWinkel = ik_matlab_ur(pos, eul, qPre, alphaArr, a, d);
+    disp(BewWinkel)
 elseif decision == '4'
     % folgende position kann korrekt angefahren werden:
-    pos = [0.25, 0.25, 0.5]
-    eul = [0, -pi, 0] % has to be in RZ, RY, RX
+    pos = [-0.15, -0.15, 0.3]
+    eul = [0, pi, 0] % has to be in RZ, RY, RX
     BewWinkel = ik_matlab_ur(pos, eul, qPre, alphaArr, a, d);
+    disp(BewWinkel)
+elseif decision == '5'
+    % folgende position kann korrekt angefahren werden:
+    pos = [0.15, 0.15, 0.3]
+    eul = [0, pi, 0] % has to be in RZ, RY, RX
+    BewWinkel = ik_matlab_ur(pos, eul, qPre, alphaArr, a, d);
+    disp(BewWinkel)
+elseif decision == '6'
+    % folgende position kann korrekt angefahren werden:
+    pos = [0.15, -0.15, 0.3]
+    eul = [0, pi, pi/6] % has to be in RZ, RY, RX
+    BewWinkel = ik_matlab_ur(pos, eul, qPre, alphaArr, a, d);
+    disp(BewWinkel)
+elseif decision == '7'
+    % folgende position kann korrekt angefahren werden:
+    pos = [0.118, -0.304, 0.304];
+    posNeg = [-0.118, 0.304, 0.404];
+    eul = [pi, pi, 0.0]; % has to be in RZ, RY, RX,
+    BewWinkel = ik_matlab_ur(pos, eul, qPre, alphaArr, a, d);
+    BewWinkelAlt = toolbox2(posNeg, eul, qPre);
+    disp(BewWinkelAlt)
+    %disp(BewWinkel)
+elseif decision == '8'
+    % folgende position kann korrekt angefahren werden:
+    pos = [-0.168, 0.304, 0.304]
+    eul = [0.0, pi, 0] % has to be in RZ, RY, RX
+    BewWinkel = toolbox2(pos, eul, qPre);
     disp(BewWinkel)
 elseif decision == 'l'
     % folgende position kann korrekt angefahren werden:

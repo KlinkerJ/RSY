@@ -11,9 +11,10 @@
 % Kerze ist notwendig für fehlerfreies BootUp; Rest kann nach Belieben
 % ein-/auskommentiert werden
 Kerze = [0;-pih;0;0;pih;pih];
+HomeUnten = [-pi/4, -pi/2, -pi/2, -pi/2, pi/2, 0];
 
 %% Rechter Winkel mit dem Greifer nach unten ausgerichtet
-% RechGU = [0;-pih;pih;0;pih;pih];
+RechGU = [0;-pih;pih;0;pih;pih];
 
 %% Rechter Winkel mit dem Greifer nach oben ausgerichtet
 % RechGO = [0;-pih;pih;pi;-pih;pih];
