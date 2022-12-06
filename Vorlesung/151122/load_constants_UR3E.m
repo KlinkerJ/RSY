@@ -25,9 +25,11 @@ a5 = 0;
 theta5 = 0; 
 
 alpha6 = 0;
-d6 = 0.0921;
+d6 = 0.0921 + 0.174;
 a6 = 0;
 theta6 = 0;
+
+dTool = 0.18;
 
 alphaArr = [alpha1; alpha2; alpha3; alpha4; alpha5; alpha6];
 d = [d1; d2; d3; d4; d5; d6];
