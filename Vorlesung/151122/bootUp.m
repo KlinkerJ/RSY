@@ -1,4 +1,6 @@
 global Socket_conn; global UR3_connected;
+global Robot_IP;
+global Port_NR;
 
 
 %% startup
