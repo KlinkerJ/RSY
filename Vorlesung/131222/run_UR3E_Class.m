@@ -1,42 +1,18 @@
 % file muss außerhalb des Ordners @UR3E sein
-
-robot = UR3E;
+clear all;
+name = "Anton";
+Robot_IP = '192.168.1.2';
+Port_NR = 30003;
+[alphaArr, d, a, theta] = load_constants_UR3E();    % alpha is a predefined MatLab funtion therefore we named the parameter alpha alphaArr
+myRobot = UniversalRobot(name, alphaArr, d, a, theta, Robot_IP, Port_NR);
 
 % test function
-robot.test_function(robot.name)
+myRobot.show_name();
 
-% load DH parameter
-robot.DH_matrices = robot.load_DH_matrices;
-disp(robot.DH_matrices)
+pos_new = [-0.085, -0.165, 0.694];
+eul_new = [ 0.2, 0.2, 0.2];
 
-% load constants
-[robot.alphaArr, robot.d, robot.a] = robot.load_constants_UR3E;
-disp(robot.alphaArr)
-disp(robot.d)
-disp(robot.a)
-
-% load constand positions
-positions = robot.load_positions;
-disp(positions)
-
-% calc ik angles
-pos = [0.25, 0.25, 0.15];
-eul = [0, pi, 0]; 
-qPre = [0; -pi/2 ;0; 0; pi/2; pi/2];
-robot.ik_angles = robot.inverse_kinematics(pos,eul,qPre,robot.alphaArr,robot.a, robot.d);
-disp(robot.ik_angles)
-
-robot.drive(robot.ik_angles)
-
-disp(robot)
-
-
-% weitere functions notwendig:
-% bootUp
-% moveIt
-% fk zum debuggen?!
-
-% & anschließend das ganze in einen ROS Node einpacken
-
-% theoretisch auch Oberklasse UR3 mit Unterklassen UR3E möglich
+tic()
+myRobot.moveJ(pos_new, eul_new);
+toc()
 
