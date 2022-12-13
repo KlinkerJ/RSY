@@ -9,8 +9,8 @@ classdef UniversalRobot < handle
         Socket_conn
         Robot_IP
         Port_NR
-        acc = 0.3;
-        vel = 0.5;
+        acc = 2.5; %0.3
+        vel = 3.0; %0.5
         radius = 0.001;
     end 
     methods
