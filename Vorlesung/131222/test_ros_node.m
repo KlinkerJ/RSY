@@ -50,7 +50,8 @@ while a == 0
     try
         camera_status_message = receive(sub_status);
         camera_position_message = receive(sub_position, 10);
-        disp(camera_status_message)
+        disp(camera_position_message)
+
         %we should check if the position message is correct size array
         if strcmp(camera_status_message.Data, 'detected')
             a = 1
