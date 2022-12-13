@@ -35,7 +35,8 @@ classdef UniversalRobot < handle
             catch
                 error('Verbindungsaufbau fehlgeschlagen.');
             end
-            fprintf(1, 'Verbindung mit UR3 hergestellt.\n');            
+            fprintf(1, 'Verbindung mit UR3 hergestellt.\n');
+            pause(2);            
         end
 
         function show_name(obj)
@@ -45,13 +46,13 @@ classdef UniversalRobot < handle
         function obj = moveJ(obj, pos_new, eul_new)
             my_theta = inverse_kinematics(obj, pos_new, eul_new);
             obj.theta = my_theta;
-            send_command_to_robot(obj, 'moveJ');
+            send_command_to_robot(obj, 'movej');
         end
 
         function obj = moveL(obj, pos_new, eul_new)
             my_theta = inverse_kinematics(obj, pos_new, eul_new);
             obj.theta = my_theta;
-            send_command_to_robot(obj, 'moveL');
+            send_command_to_robot(obj, 'movel');
         end
 
         function send_command_to_robot(obj, move)   % move must be 'moveJ' or 'moveL'
