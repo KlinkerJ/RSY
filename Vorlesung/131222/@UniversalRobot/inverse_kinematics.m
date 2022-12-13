@@ -220,7 +220,7 @@ function solution = closetSolution(solutions, q)
     solution = solutions(1, :);
 
     for i = 1:size(solutions, 1)
-        configurationDistance = sum(((solutions(i, :) - q') .* weights).^2);
+        configurationDistance = sum(((solutions(i, :) - q') .* weights).^2, 'all');
         if configurationDistance < bestConfigurationDistance
             bestConfigurationDistance = configurationDistance;
             solution = solutions(i, :);
