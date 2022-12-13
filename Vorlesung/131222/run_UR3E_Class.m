@@ -17,6 +17,6 @@ pos_new = [-0.15, -0.15, 0.30];
 eul_new = [ 0, pi, 0];
 
 tic()
-%myRobot.moveJ(pos_new, eul_new);
+myRobot.moveJ(pos_new, eul_new);
 toc()
 
