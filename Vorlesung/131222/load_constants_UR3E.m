@@ -26,7 +26,7 @@ function [alphaArr, d, a, theta] = load_constants_UR3E()
     theta5 = 0; 
     
     alpha6 = 0;
-    d6 = 0.0921;
+    d6 = 0.0921 + 0.174; %0.174 is tool length
     a6 = 0;
     theta6 = 0;
     
