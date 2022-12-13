@@ -9,10 +9,14 @@ myRobot = UniversalRobot(name, alphaArr, d, a, theta, Robot_IP, Port_NR);
 % test function
 myRobot.show_name();
 
-pos_new = [-0.085, -0.165, 0.694];
-eul_new = [ 0.2, 0.2, 0.2];
+%drive to Kerze
+myRobot.theta = [0; -pi/2; 0; 0; pi/2; pi/2];
+myRobot.send_command_to_robot('movej');
+
+pos_new = [-0.15, -0.15, 0.30];
+eul_new = [ 0, pi, 0];
 
 tic()
-myRobot.moveJ(pos_new, eul_new);
+%myRobot.moveJ(pos_new, eul_new);
 toc()
 
