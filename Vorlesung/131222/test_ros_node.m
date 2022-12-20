@@ -17,6 +17,7 @@ sub_release = ros.Subscriber(node, '/Release', 'std_msgs/String');
 
 status_msg = rosmessage('std_msgs/String');
 position_msg = rosmessage('std_msgs/String');
+release_msg = rosmessage('std_msgs/String');
 %position_msg = rosmessage('geometry_msgs/Vector3');
 
 % Class wird initialisiert, dann:
@@ -69,16 +70,13 @@ eul_new = [0, pi, -pi / 4];
 myRobot.moveJ(pos_new, eul_new);
 
 % publish home status
-status_msg.Data = 'init';
+status_msg.Data = 'home';
 send(pub_status, status_msg);
 
 % hier zu vect3 position fahren!!
-% myRobot.moveJ(pos_new, eul_new);
-%disp(camera_position_message)
-%disp(camera_position_message.X)
 pos_new = [camera_position_message.X, camera_position_message.Y, camera_position_message.Z];
 disp(pos_new);
-eul_new = [ 0, pi, 0];
+%eul_new = [0, pi, -pi/4];
 myRobot.moveJ(pos_new, eul_new);
 
 % wait to grip
@@ -90,15 +88,17 @@ send(pub_status, status_msg);
 
 % wait for release message
 b = 0
+
 while b == 0
 
     try
         release_message = receive(sub_release, 30);
         disp(release_message)
-    end
 
-    if strcmp(release_message.Data, 'true')
-        b = 1
+        if strcmp(release_message.Data, 'true')
+            b = 1
+        end
+
     end
 
 end
@@ -106,13 +106,9 @@ end
 % publish status (and position) while driving
 status_msg.Data = 'driving';
 send(pub_status, status_msg);
-%position_msg.Data = 'x, y, z';
-%send(pub_position, position_msg);
 
 % set finished
 status_msg.Data = 'finished';
 send(pub_status, status_msg);
 
 pause(1)
-
-%clear('pub_status', 'pub_position', 'RobotANode')
