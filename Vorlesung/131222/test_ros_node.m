@@ -82,7 +82,7 @@ myRobot.moveL(pos_new, eul_new);
 
 
 % wait to grip
-r = input("Please confirm grip\t")
+r = input("Please confirm grip")
 
 % drive to circle points and grip manually
 status_msg.Data = 'gripped';
