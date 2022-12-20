@@ -6,7 +6,9 @@ name = "A";
 Robot_IP = '192.168.1.2';
 Port_NR = 30003;
 
-node = ros.Node('/RobotANode');
+
+
+node = ros.Node('/RobotANode', '192.168.1.18');
 
 pub_status = ros.Publisher(node, '/RobotANode/status', 'std_msgs/String');
 
@@ -90,6 +92,7 @@ send(pub_status, status_msg);
 
 % wait for release message
 b = 0
+disp("Waiting for Release")
 
 while b == 0
 
