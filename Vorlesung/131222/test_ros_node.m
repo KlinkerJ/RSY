@@ -17,7 +17,7 @@ sub_release = ros.Subscriber(node, '/Release', 'std_msgs/String');
 
 status_msg = rosmessage('std_msgs/String');
 position_msg = rosmessage('std_msgs/String');
-release_msg = rosmessage('std_msgs/String');
+%release_msg = rosmessage('std_msgs/String');
 %position_msg = rosmessage('geometry_msgs/Vector3');
 
 % Class wird initialisiert, dann:
@@ -73,14 +73,16 @@ myRobot.moveJ(pos_new, eul_new);
 status_msg.Data = 'home';
 send(pub_status, status_msg);
 
-% hier zu vect3 position fahren!!
-pos_new = [camera_position_message.X, camera_position_message.Y, camera_position_message.Z];
-disp(pos_new);
-%eul_new = [0, pi, -pi/4];
+% drive to vector3 position, but vertically above
+pos_new = [camera_position_message.X, camera_position_message.Y, camera_position_message.Z + 0.1];
 myRobot.moveJ(pos_new, eul_new);
+% drive down to vector3 position
+pos_new = [camera_position_message.X, camera_position_message.Y, camera_position_message.Z];
+myRobot.moveL(pos_new, eul_new);
+
 
 % wait to grip
-r = input("Please confirm grip")
+r = input("Please confirm grip\t")
 
 % drive to circle points and grip manually
 status_msg.Data = 'gripped';
@@ -104,6 +106,7 @@ while b == 0
 end
 
 % publish status (and position) while driving
+% the position we should drive to is missing here
 status_msg.Data = 'driving';
 send(pub_status, status_msg);
 
