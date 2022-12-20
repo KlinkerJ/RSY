@@ -10,7 +10,6 @@ Port_NR = 30003;
 node = ros.Node('/RobotANode');
 
 pub_status = ros.Publisher(node, '/RobotANode/status', 'std_msgs/String');
-pub_position = ros.Publisher(node, '/RobotANode/position', 'std_msgs/String');
 
 %sub_position = ros.Subscriber(node, '/CameraANode/circlePosition', 'std_msgs/String');
 sub_position = ros.Subscriber(node, '/CameraANode/circlePosition', 'geometry_msgs/Vector3');
@@ -19,8 +18,6 @@ sub_status = ros.Subscriber(node, '/CameraANode/status', 'std_msgs/String');
 status_msg = rosmessage('std_msgs/String');
 position_msg = rosmessage('std_msgs/String');
 %position_msg = rosmessage('geometry_msgs/Vector3');
-
-
 
 % Class wird initialisiert, dann:
 [alphaArr, d, a, theta] = load_constants_UR3E();    % alpha is a predefined MatLab funtion therefore we named the parameter alpha alphaArr
@@ -33,15 +30,13 @@ myRobot.send_command_to_robot('movej');
 status_msg.Data = 'kerze';
 send(pub_status,status_msg);
 
-% publish init status
-status_msg.Data = 'init';
-send(pub_status,status_msg);
-
-% drive to home 
+% drive to init 
 pos_new = [-0.15, -0.15, 0.30];
 eul_new = [ 0, pi, 0];
 myRobot.moveJ(pos_new, eul_new);
-status_msg.Data = 'home';
+
+% publish init status
+status_msg.Data = 'init';
 send(pub_status,status_msg);
 
 % wait for camera to detect circles
@@ -60,6 +55,28 @@ while a == 0
 end
 
 disp('detected')
+
+% drive to home 
+pos_new = [0.0, -0.4, 0.2];
+eul_new = [ 0, pi, 0];
+myRobot.moveJ(pos_new, eul_new);
+pos_new = [0.1, -0.40, 0.1];
+eul_new = [ 0, pi, -pi/4];
+myRobot.moveJ(pos_new, eul_new);
+
+% publish home status
+status_msg.Data = 'init';
+send(pub_status,status_msg);
+
+
+% hier zu vect3 position fahren!!
+% myRobot.moveJ(pos_new, eul_new);
+%disp(camera_position_message)
+%disp(camera_position_message.X)
+pos_new = [camera_position_message.X, camera_position_message.Y, camera_position_message.Z];
+disp(pos_new);
+eul_new = [ 0, pi, 0];
+myRobot.moveJ(pos_new, eul_new);
 
 % drive to circle points and grip manually
 status_msg.Data = 'gripped';
