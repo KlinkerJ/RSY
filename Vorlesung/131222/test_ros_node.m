@@ -110,6 +110,10 @@ end
 status_msg.Data = 'driving';
 send(pub_status, status_msg);
 
+% drive up from vector3 position
+pos_new = [camera_position_message.X, camera_position_message.Y, camera_position_message.Z + 0.1];
+myRobot.moveL(pos_new, eul_new);
+
 % set finished
 status_msg.Data = 'finished';
 send(pub_status, status_msg);
