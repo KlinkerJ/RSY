@@ -6,7 +6,6 @@ name = "A";
 Robot_IP = '192.168.1.2';
 Port_NR = 30003;
 
-
 node = ros.Node('/RobotANode');
 
 pub_status = ros.Publisher(node, '/RobotANode/status', 'std_msgs/String');
@@ -14,34 +13,37 @@ pub_status = ros.Publisher(node, '/RobotANode/status', 'std_msgs/String');
 %sub_position = ros.Subscriber(node, '/CameraANode/circlePosition', 'std_msgs/String');
 sub_position = ros.Subscriber(node, '/CameraANode/circlePosition', 'geometry_msgs/Vector3');
 sub_status = ros.Subscriber(node, '/CameraANode/status', 'std_msgs/String');
+sub_release = ros.Subscriber(node, '/Release', 'std_msgs/String');
 
 status_msg = rosmessage('std_msgs/String');
 position_msg = rosmessage('std_msgs/String');
 %position_msg = rosmessage('geometry_msgs/Vector3');
 
 % Class wird initialisiert, dann:
-[alphaArr, d, a, theta] = load_constants_UR3E();    % alpha is a predefined MatLab funtion therefore we named the parameter alpha alphaArr
+[alphaArr, d, a, theta] = load_constants_UR3E(); % alpha is a predefined MatLab funtion therefore we named the parameter alpha alphaArr
 myRobot = UniversalRobot(name, alphaArr, d, a, theta, Robot_IP, Port_NR);
 
 % drive to Kerze
-myRobot.theta = [0; -pi/2; 0; 0; pi/2; pi/2];
+myRobot.theta = [0; -pi / 2; 0; 0; pi / 2; pi / 2];
 myRobot.show_name();
 myRobot.send_command_to_robot('movej');
 status_msg.Data = 'kerze';
-send(pub_status,status_msg);
+send(pub_status, status_msg);
 
-% drive to init 
+% drive to init
 pos_new = [-0.15, -0.15, 0.30];
-eul_new = [ 0, pi, 0];
+eul_new = [0, pi, 0];
 myRobot.moveJ(pos_new, eul_new);
 
 % publish init status
 status_msg.Data = 'init';
-send(pub_status,status_msg);
+send(pub_status, status_msg);
 
 % wait for camera to detect circles
 a = 0
+
 while a == 0
+
     try
         camera_status_message = receive(sub_status);
         camera_position_message = receive(sub_position, 10);
@@ -51,23 +53,24 @@ while a == 0
         if strcmp(camera_status_message.Data, 'detected')
             a = 1
         end
+
     end
+
 end
 
 disp('detected')
 
-% drive to home 
+% drive to home
 pos_new = [0.0, -0.4, 0.2];
-eul_new = [ 0, pi, 0];
+eul_new = [0, pi, 0];
 myRobot.moveJ(pos_new, eul_new);
 pos_new = [0.1, -0.40, 0.1];
-eul_new = [ 0, pi, -pi/4];
+eul_new = [0, pi, -pi / 4];
 myRobot.moveJ(pos_new, eul_new);
 
 % publish home status
 status_msg.Data = 'init';
-send(pub_status,status_msg);
-
+send(pub_status, status_msg);
 
 % hier zu vect3 position fahren!!
 % myRobot.moveJ(pos_new, eul_new);
@@ -78,19 +81,37 @@ disp(pos_new);
 eul_new = [ 0, pi, 0];
 myRobot.moveJ(pos_new, eul_new);
 
+% wait to grip
+r = input("Please confirm grip")
+
 % drive to circle points and grip manually
 status_msg.Data = 'gripped';
-send(pub_status,status_msg);
+send(pub_status, status_msg);
 
-% publish status (and position) while driving 
+% wait for release message
+b = 0
+while b == 0
+
+    try
+        release_message = receive(sub_release, 30);
+        disp(release_message)
+    end
+
+    if strcmp(release_message.Data, 'true')
+        b = 1
+    end
+
+end
+
+% publish status (and position) while driving
 status_msg.Data = 'driving';
-send(pub_status,status_msg);
+send(pub_status, status_msg);
 %position_msg.Data = 'x, y, z';
 %send(pub_position, position_msg);
 
 % set finished
 status_msg.Data = 'finished';
-send(pub_status,status_msg);
+send(pub_status, status_msg);
 
 pause(1)
 
