@@ -72,6 +72,14 @@ classdef UniversalRobot < handle
             end
         end
 
+        function set_velocity(obj, new_velocity)
+            obj.vel = new_velocity;
+        end
+
+        function set_acceleration(obj, new_acceleration)
+            obj.acc = new_acceleration;
+        end
+
         % functions mit eigenem file müssen scheinbar nicht gelistet werden
     end
 end
