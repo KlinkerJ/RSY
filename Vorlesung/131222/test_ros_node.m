@@ -79,6 +79,9 @@ send(pub_status, status_msg);
 pos_new = [camera_position_message.X, camera_position_message.Y, camera_position_message.Z + 0.1];
 myRobot.moveJ(pos_new, eul_new);
 % drive down to vector3 position
+% first change speed
+myRobot.set_velocity(0.2)
+myRobot.set_acceleration(0.2)
 pos_new = [camera_position_message.X, camera_position_message.Y, camera_position_message.Z];
 myRobot.moveL(pos_new, eul_new);
 
