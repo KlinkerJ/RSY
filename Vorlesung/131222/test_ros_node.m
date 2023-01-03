@@ -1,58 +1,62 @@
 %rosshutdown
 %pause(2)
 %srosinit
+
 clear all;
 name = "A";
 Robot_IP = '192.168.1.2';
 Port_NR = 30003;
 
-
-
+% create node for robot A and connect to ros master
 node = ros.Node('/RobotANode', '192.168.1.18');
 
+% init Publisher for robot status
 pub_status = ros.Publisher(node, '/RobotANode/status', 'std_msgs/String');
 
-%sub_position = ros.Subscriber(node, '/CameraANode/circlePosition', 'std_msgs/String');
+% init Subscriber for Camera information
 sub_position = ros.Subscriber(node, '/CameraANode/circlePosition', 'geometry_msgs/Vector3');
 sub_status = ros.Subscriber(node, '/CameraANode/status', 'std_msgs/String');
+
+% init Subscriber for common release with robot B
 sub_release = ros.Subscriber(node, '/Release', 'std_msgs/String');
 
+% define types for messages
 status_msg = rosmessage('std_msgs/String');
-position_msg = rosmessage('std_msgs/String');
-%release_msg = rosmessage('std_msgs/String');
-%position_msg = rosmessage('geometry_msgs/Vector3');
+% position_msg = rosmessage('std_msgs/String'); not needed
 
-% Class wird initialisiert, dann:
+% load UR3E constants and initialise UR class object
 [alphaArr, d, a, theta] = load_constants_UR3E(); % alpha is a predefined MatLab funtion therefore we named the parameter alpha alphaArr
 myRobot = UniversalRobot(name, alphaArr, d, a, theta, Robot_IP, Port_NR);
-
-% drive to Kerze
-myRobot.theta = [0; -pi / 2; 0; 0; pi / 2; pi / 2];
 myRobot.show_name();
+
+% drive to Kerze by sending values for all 6 axis
+myRobot.theta = [0; -pi / 2; 0; 0; pi / 2; pi / 2];
 myRobot.send_command_to_robot('movej');
+
+% publish robot staus
 status_msg.Data = 'kerze';
 send(pub_status, status_msg);
 
-% drive to init
+% drive to init and publish init status
 pos_new = [-0.15, -0.15, 0.30];
 eul_new = [0, pi, 0];
 myRobot.moveJ(pos_new, eul_new);
-
-% publish init status
 status_msg.Data = 'init';
 send(pub_status, status_msg);
 
-% wait for camera to detect circles
+% wait for camera to detect circle position
 a = 0
-
 while a == 0
 
     try
+        % recieve status from camera node
         camera_status_message = receive(sub_status);
-        camera_position_message = receive(sub_position, 10);
+
+        % recieve 'geometry_msgs/Vector3' from camera node
+        camera_position_message = receive(sub_position, 10); 
         disp(camera_position_message)
 
-        %we should check if the position message is correct size array
+        % leave loop it status == 'detected'
         if strcmp(camera_status_message.Data, 'detected')
             a = 1
         end
