@@ -69,10 +69,7 @@ disp('detected')
 
 % drive to home
 pos_new = [0.0, -0.4, 0.2];
-eul_new = [0, pi, 0];
-myRobot.moveJ(pos_new, eul_new);
-pos_new = [0.1, -0.40, 0.1];
-eul_new = [0, pi, -pi / 4];
+eul_new = [0, pi, -pi / 4]; % Drehung
 myRobot.moveJ(pos_new, eul_new);
 
 % publish home status
@@ -94,15 +91,15 @@ myRobot.moveL(pos_new, eul_new);
 r = input("Please confirm grip")
 
 % drive to circle points and grip manually
-status_msg.Data = 'gripped';
-send(pub_status, status_msg);
 
 % wait for release message
 b = 0
 disp("Waiting for Release")
 
 while b == 0
-
+    % publishing 'gripped' as long as no release is received
+    status_msg.Data = 'gripped';
+    send(pub_status, status_msg);
     try
         release_message = receive(sub_release, 30);
         disp(release_message)
@@ -121,7 +118,7 @@ status_msg.Data = 'driving';
 send(pub_status, status_msg);
 
 % drive up from vector3 position
-pos_new = [camera_position_message.X, camera_position_message.Y, camera_position_message.Z + 0.1];
+pos_new = [camera_position_message.X, camera_position_message.Y, camera_position_message.Z + 0.105];
 myRobot.moveL(pos_new, eul_new);
 
 % set finished
