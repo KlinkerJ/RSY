@@ -118,6 +118,7 @@ status_msg.Data = 'driving';
 send(pub_status, status_msg);
 
 % drive up from vector3 position
+pause(0.3) % time delay for synchronized lifting with Robot B
 pos_new = [camera_position_message.X, camera_position_message.Y, camera_position_message.Z + 0.105];
 myRobot.moveL(pos_new, eul_new);
 
