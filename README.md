@@ -18,12 +18,12 @@ Our project can be started by running the camera script at `/src/Camera/CameraSc
 
 ## Contributors
 
-- Lennart Fuhrig, B. Eng. @lennart2810
-- Marcel Heinen, B. Sc. @MH98
-- Jonas Klinker, B. Sc. @KlinkerJ
-- Dominik Küsters, B. Eng. @DominikKuesters
-- Jens Ludwig, B. Eng. @jenslu
-- Matthias Uesbeck, B. Eng. @MatthiasUesbeck
+- Lennart Fuhrig, B. Eng. [@lennart2810](https://github.com/lennart2810)
+- Marcel Heinen, B. Sc. [@MH98](https://github.com/MH98)
+- Jonas Klinker, B. Sc. [@KlinkerJ](https://github.com/KlinkerJ)
+- Dominik Küsters, B. Eng. [@DominikKuesters](https://github.com/DominikKuesters)
+- Jens Ludwig, B. Eng. [@jenslu](https://github.com/jenslu)
+- Matthias Uesbeck, B. Eng. [@MatthiasUesbeck](https://github.com/MatthiasUesbeck)
 
 ## Contact
 
