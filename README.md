@@ -8,6 +8,7 @@ This is a repository for the Robot Systems course in the master's program in mec
 ## Task
 In the course, a program will be developed that (1) recognizes an object with Intel D415 cameras (in this specific case a squared timber, which is marked with circles at both ends) and then (2) is gripped and lifted by a Universal Robot UR3e. The squared timber should be recognized and gripped at both ends by seperate robots. The process of the other robot runs independently on a different computer and is developed by a different group of students. The robot operating system ensures communication so that both robots only start moving after they have successfully gripped.
 
+![TopDown View](/archive/img/TopDownView.PNG)
 ![Universal Robot UR3e](https://uploads.unchainedrobotics.de/media/products/Product_images2FUR3e_1_d0fd2e60.jpg)
 
 ## Content
